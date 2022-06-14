@@ -3,16 +3,11 @@ import time, random
 from snake import Snake
 from food import Food
 from scoreboard import ScoreBoard
+from speed import Speed
 
 # Default size for screen
 SCREEN_SIZE = 600
 
-# Speed for screen
-SPEED = {
-    "FAST":     0.1,
-    "MEDIUM":   0.2,
-    "LOW":      0.3
-}
 
 screen = Screen()
 screen.setup(width=SCREEN_SIZE, height=SCREEN_SIZE)
@@ -21,12 +16,16 @@ screen.title("Snake Game by Alpay")
 screen.tracer(0)
 
 userSelectionSpeed = screen.textinput(title="Speed Selection", prompt="Select a speed: FAST, MEDIUM, LOW")
+selectedSpeed = userSelectionSpeed.lower()
 
 game_ends = True
+isSpeedCalibrated = False
 
+# Object creations
 snake = Snake()
 food = Food()
 scoreboard = ScoreBoard()
+speed = Speed((selectedSpeed))
 
 
 screen.listen()
@@ -38,17 +37,25 @@ screen.update()
 
 while game_ends:
     screen.update()
-    time.sleep(SPEED[userSelectionSpeed])
+    time.sleep(speed.localSpeed)
     snake.move()
     if snake.head.distance(food) < 15:
         food.refresh()
-        scoreboard.hit(SPEED[userSelectionSpeed])
+        scoreboard.hit(speed.selection[selectedSpeed])
         snake.extend()
 
     if snake.headPosition():
         scoreboard.gameover()
         game_ends = False
 
+    if (len(snake.snakes)%5) == 0 and (isSpeedCalibrated == False):
+        isSpeedCalibrated = speed.calibrate(isSpeedCalibrated)
+
+    if len(snake.snakes)%6 == 0:
+        isSpeedCalibrated = False
+
+    speed.checkMaxSpeed()
+    
     for body in snake.snakes[1::]:
         if snake.head.distance(body) < 10:
             scoreboard.gameover()
