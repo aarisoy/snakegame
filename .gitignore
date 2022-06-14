@@ -1,0 +1,3 @@
+# Ignore compiled outputs and builds
+\__pycache__
+\build
