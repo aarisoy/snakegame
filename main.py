@@ -48,12 +48,13 @@ while game_ends:
         scoreboard.gameover()
         game_ends = False
 
-    if len(snake.snakes)%5 == 0:
+    if (len(snake.snakes)%5) == 0 and (isSpeedCalibrated == False):
         isSpeedCalibrated = speed.calibrate(isSpeedCalibrated)
-        # print(f"Local speed: {speed.localSpeed}, calibration flag: {isSpeedCalibrated}")
-        
-    isSpeedCalibrated = False
-    print("Main ",isSpeedCalibrated)
+
+    if len(snake.snakes)%6 == 0:
+        isSpeedCalibrated = False
+
+    speed.checkMaxSpeed()
     
     for body in snake.snakes[1::]:
         if snake.head.distance(body) < 10:
