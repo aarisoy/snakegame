@@ -1,4 +1,5 @@
 from turtle import Turtle
+import time
 
 # Classic starting pos of snake
 starting_pos =[(0,0),(-20,0),(-40,0)]
@@ -28,6 +29,15 @@ class Snake:
         for snake_pos in starting_pos:
             self.addTail(snake_pos)
     
+    def reset(self):
+        for snake in self.snakes:
+            snake.goto(1000,1000) # send snakes to the empty space
+        time.sleep(2) # 2 second sleep to recognize the game over
+        
+        self.snakes.clear()
+        self.createSnakes()
+        self.head = self.snakes[0]
+
     def move(self):
         for snake_num in range((len(self.snakes)-1),0,-1):
             replacedx = self.snakes[snake_num-1].xcor()
